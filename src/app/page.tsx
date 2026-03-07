@@ -1,5 +1,5 @@
-import LofiCamping from '@/components/LofiCamping';
+import LofiMoodMixer from '@/components/LofiMoodMixer';
 
 export default function Page() {
-	return <LofiCamping />;
+	return <LofiMoodMixer />;
 }
