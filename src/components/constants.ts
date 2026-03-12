@@ -45,7 +45,7 @@ export const INIT: MoodVals = { time: 78, warmth: 88, weather: 0, nature: 55 };
 
 export const PRESETS: Preset[] = [
 	{
-		id: 'campfire',
+		id: 'campfireGlow',
 		name: 'Campfire Glow',
 		emoji: '🔥',
 		time: 78,
@@ -54,7 +54,7 @@ export const PRESETS: Preset[] = [
 		nature: 48
 	},
 	{
-		id: 'midnight',
+		id: 'midnightStudy',
 		name: 'Midnight Study',
 		emoji: '🌙',
 		time: 93,
@@ -63,7 +63,7 @@ export const PRESETS: Preset[] = [
 		nature: 28
 	},
 	{
-		id: 'rainy',
+		id: 'rainyMorning',
 		name: 'Rainy Morning',
 		emoji: '🌧',
 		time: 22,
@@ -72,7 +72,7 @@ export const PRESETS: Preset[] = [
 		nature: 60
 	},
 	{
-		id: 'golden',
+		id: 'goldenDusk',
 		name: 'Golden Dusk',
 		emoji: '🌅',
 		time: 65,
@@ -81,7 +81,7 @@ export const PRESETS: Preset[] = [
 		nature: 72
 	},
 	{
-		id: 'forest',
+		id: 'forestNap',
 		name: 'Forest Nap',
 		emoji: '🍃',
 		time: 40,

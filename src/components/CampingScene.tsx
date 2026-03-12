@@ -18,7 +18,7 @@ function peakSnow(
 	const srx = +(px + (rx - px) * depth).toFixed(1);
 	const sry = +(py + (ry - py) * depth).toFixed(1);
 	const qy = +(Math.max(sly, sry) + 6).toFixed(1);
-	return `M ${slx},${sly} L ${px},${py} L ${srx},${sry} Q ${px},${qy} ${slx},${sly} Z`;
+	return `M ${slx},${sly} Q ${px},${py} ${srx},${sry} Q ${px},${qy} ${slx},${sly} Z`;
 }
 
 function tierSnow(
@@ -399,7 +399,7 @@ export default function CampingScene({
 					<stop offset='40%' stopColor='rgba(240,248,255,0.22)' />
 					<stop offset='100%' stopColor='rgba(220,236,252,0)' />
 				</radialGradient>
-				<filter id='ffGlow'>
+				<filter id='ffGlow' x='-80%' y='-80%' width='260%' height='260%'>
 					<feGaussianBlur stdDeviation='2.2' result='b' />
 					<feMerge>
 						<feMergeNode in='b' />
@@ -536,7 +536,7 @@ export default function CampingScene({
 
 				{/* ── Background mountains ── */}
 				<path
-					d='M 0,285 L 75,192 L 158,228 L 248,162 L 338,202 L 422,152 L 512,194 L 602,152 L 682,183 L 762,164 L 835,190 L 900,172 L 900,325 L 0,325 Z'
+					d='M 0,285 L 49,225 Q 75,192 129,215 L 158,228 L 217,185 Q 248,162 307,188 L 338,202 L 393,170 Q 422,152 481,179 L 512,194 L 571,167 Q 602,152 654,172 L 682,183 L 734,171 Q 762,164 809,181 L 835,190 L 900,172 L 900,325 L 0,325 Z'
 					fill={mtBg}
 					style={{ transition: 'fill 2s ease' }}
 				/>
@@ -551,7 +551,7 @@ export default function CampingScene({
 
 				{/* ── Mid mountains ── */}
 				<path
-					d='M 0,312 L 58,268 L 128,292 L 218,252 L 308,272 L 378,248 L 458,268 L 538,242 L 618,262 L 712,250 L 792,270 L 862,258 L 900,264 L 900,325 L 0,325 Z'
+					d='M 0,312 L 38,283 Q 58,268 104,284 L 128,292 L 187,266 Q 218,252 277,265 L 308,272 L 354,256 Q 378,248 430,261 L 458,268 L 510,251 Q 538,242 590,255 L 618,262 L 679,254 Q 712,250 764,263 L 792,270 L 838,262 Q 862,258 887,262 L 900,264 L 900,325 L 0,325 Z'
 					fill={mtMid}
 					style={{ transition: 'fill 2s ease' }}
 				/>
