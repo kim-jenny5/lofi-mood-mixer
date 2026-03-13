@@ -1,17 +1,29 @@
-import { useState } from 'react';
-
 import type { MoodVals } from '@/lib/constants';
 import styles from './NowPlayingBar.module.css';
+import { useYouTubePlayer } from '@/lib/UseYoutubePlayer';
 
 export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
-	const [playing, setPlaying] = useState(false);
+	const { containerRef, playing, ready, toggle } = useYouTubePlayer();
 
 	return (
 		<div className={styles.panelFooter}>
+			<div
+				ref={containerRef}
+				style={{
+					width: 1,
+					height: 1,
+					position: 'absolute',
+					opacity: 0,
+					pointerEvents: 'none'
+				}}
+			/>
+
 			<div className={styles.panelPlayRow}>
 				<button
 					className={`${styles.playBtn}${playing ? ` ${styles.playBtnOn}` : ''}`}
-					title={playing ? 'Pause' : 'Play ambience'}
+					onClick={toggle}
+					disabled={!ready}
+					title={playing ? 'Pause' : 'Play lofi stream'}
 				>
 					{playing ? '⏸' : '▶'}
 				</button>
@@ -28,15 +40,15 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 					</div>
 					{playing && (
 						<div className={`${styles.badge} ${styles.badgeActive}`}>
-							♪ Lofi stream
+							♪ Lofi Girl
 						</div>
 					)}
 				</div>
 			</div>
 			<div
-				className={`${styles.nowPlaying}${playing ? ` ${styles.nowPlayingActive}` : ''}`}
+				className={`${styles.nowPlaying}${playing ? '' : ` ${styles.nowPlayingIdle}`}`}
 			>
-				{playing ? '♩ Now playing' : 'Now playing'}
+				{playing ? '♩ Now playing — Lofi Hip Hop Radio' : 'Silence... for now'}
 			</div>
 		</div>
 	);

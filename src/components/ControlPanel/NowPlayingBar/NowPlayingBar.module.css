@@ -77,16 +77,15 @@
 
 /* Now playing */
 .nowPlaying {
-	font-family: 'Cormorant Garamond', serif;
 	font-style: italic;
 	font-size: 0.72rem;
 	font-weight: 300;
 	letter-spacing: 0.12em;
-	color: rgba(255, 210, 155, 0.38);
+	color: rgba(255, 210, 155, 1);
 	text-align: center;
 	transition: color 0.8s ease;
 }
 
-.nowPlayingActive {
-	color: rgba(255, 210, 155, 0.68);
+.nowPlayingIdle {
+	opacity: 0.7;
 }
