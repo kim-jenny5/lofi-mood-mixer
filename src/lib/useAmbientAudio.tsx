@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { MoodVals } from '@/lib/constants';
 
 const VIDEOS = {
@@ -83,6 +83,8 @@ export function useAmbientAudio(vals: MoodVals) {
 
 	const players = useRef<Partial<Record<keyof typeof VIDEOS, YT.Player>>>({});
 	const valsRef = useRef(vals);
+	const [ready, setReady] = useState(false);
+	const readyCount = useRef(0);
 
 	useEffect(() => {
 		valsRef.current = vals;
@@ -101,12 +103,16 @@ export function useAmbientAudio(vals: MoodVals) {
 				cozy: cozyDivRef.current
 			};
 
+			const total = Object.keys(VIDEOS).length;
+
 			(Object.keys(VIDEOS) as (keyof typeof VIDEOS)[]).forEach((key) => {
 				const el = divs[key];
 				if (!el) return;
 				players.current[key] = makePlayer(el, VIDEOS[key], () => {
 					const vols = computeVolumes(valsRef.current);
 					players.current[key]?.setVolume(vols[key]);
+					readyCount.current += 1;
+					if (!cancelled && readyCount.current >= total) setReady(true);
 				});
 			});
 		});
@@ -125,5 +131,5 @@ export function useAmbientAudio(vals: MoodVals) {
 		});
 	}, [vals]);
 
-	return { rainDivRef, natureDayDivRef, natureNightDivRef, cozyDivRef };
+	return { rainDivRef, natureDayDivRef, natureNightDivRef, cozyDivRef, ready };
 }

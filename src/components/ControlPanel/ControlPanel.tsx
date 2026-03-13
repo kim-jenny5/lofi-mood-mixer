@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import type { MoodVals, Preset } from '../../lib/constants';
 import { PRESETS, SLIDERS } from '../../lib/constants';
 import { animateMoodVals } from '@/lib/utils';
+import { useAmbientAudio } from '@/lib/useAmbientAudio';
 import styles from './ControlPanel.module.css';
 import MoodSlider from './MoodSlider/MoodSlider';
 import NowPlayingBar from './NowPlayingBar/NowPlayingBar';
@@ -25,6 +26,15 @@ export default function ControlPanel({
 }: ControlPanelProps) {
 	const [activePreset, setActive] = useState<string | null>('campfire');
 	const [label, setLabel] = useState('');
+	const [notice, setNotice] = useState('');
+
+	const {
+		rainDivRef,
+		natureDayDivRef,
+		natureNightDivRef,
+		cozyDivRef,
+		ready: ambientReady
+	} = useAmbientAudio(vals);
 
 	const animateTo = useCallback(
 		(target: MoodVals, onDone?: () => void) => {
@@ -63,18 +73,18 @@ export default function ControlPanel({
 		setVals((prev) => ({ ...prev, [key]: v }));
 	};
 
+	const handleSave = (name: string) => {
+		setNotice(`✦ "${name}" bottled`);
+		setTimeout(() => setNotice(''), 2200);
+	};
+
 	return (
 		<>
-			{/* Bottle this vibe notification */}
-			{/* <div
-				className={styles.notice}
-				style={{
-					opacity: notice ? 1 : 0,
-					transform: `translateX(-50%) translateY(${notice ? 0 : -12}px)`
-				}}
+			<div
+				className={`${styles.notice}${!notice ? ` ${styles.noticeHidden}` : ''}`}
 			>
 				{notice}
-			</div> */}
+			</div>
 			<div className={styles.panel}>
 				<div className={styles.sectionLabel}>Presets</div>
 				<div className={styles.presetRow}>
@@ -106,9 +116,17 @@ export default function ControlPanel({
 					setActive={setActive}
 					animateTo={animateTo}
 					valsRef={valsRef}
+					onSave={handleSave}
+					disabled={!ambientReady}
 				/>
 				<div className={styles.divider} />
-				<NowPlayingBar vals={vals} />
+				<NowPlayingBar
+					vals={vals}
+					rainDivRef={rainDivRef}
+					natureDayDivRef={natureDayDivRef}
+					natureNightDivRef={natureNightDivRef}
+					cozyDivRef={cozyDivRef}
+				/>
 			</div>
 		</>
 	);

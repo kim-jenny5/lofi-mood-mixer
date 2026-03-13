@@ -1,7 +1,6 @@
 import type { MoodVals } from '@/lib/constants';
 import styles from './NowPlayingBar.module.css';
 import { useYouTubePlayer } from '@/lib/useYoutubePlayer';
-import { useAmbientAudio } from '@/lib/useAmbientAudio';
 
 const hiddenPlayer: React.CSSProperties = {
 	position: 'absolute',
@@ -11,10 +10,22 @@ const hiddenPlayer: React.CSSProperties = {
 	pointerEvents: 'none'
 };
 
-export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
+interface NowPlayingBarProps {
+	vals: MoodVals;
+	rainDivRef: React.RefObject<HTMLDivElement | null>;
+	natureDayDivRef: React.RefObject<HTMLDivElement | null>;
+	natureNightDivRef: React.RefObject<HTMLDivElement | null>;
+	cozyDivRef: React.RefObject<HTMLDivElement | null>;
+}
+
+export default function NowPlayingBar({
+	vals,
+	rainDivRef,
+	natureDayDivRef,
+	natureNightDivRef,
+	cozyDivRef
+}: NowPlayingBarProps) {
 	const { containerRef, playing, ready, toggle } = useYouTubePlayer();
-	const { rainDivRef, natureDayDivRef, natureNightDivRef, cozyDivRef } =
-		useAmbientAudio(vals);
 
 	return (
 		<div className={styles.panelFooter}>

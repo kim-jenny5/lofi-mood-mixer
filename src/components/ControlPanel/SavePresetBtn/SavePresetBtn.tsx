@@ -1,7 +1,26 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { MoodVals, SavedVibe } from '../../../lib/constants';
 import styles from './SavePresetBtn.module.css';
+
+const STORAGE_KEY = 'lofi-saved-vibes';
+
+function loadVibes(): SavedVibe[] {
+	try {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		return raw ? (JSON.parse(raw) as SavedVibe[]) : [];
+	} catch {
+		return [];
+	}
+}
+
+function persistVibes(vibes: SavedVibe[]) {
+	try {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(vibes));
+	} catch (e) {
+		console.error('Failed to persist vibes to localStorage:', e);
+	}
+}
 
 interface SavePresetBtnProps {
 	label: string;
@@ -9,6 +28,8 @@ interface SavePresetBtnProps {
 	setActive: React.Dispatch<React.SetStateAction<string | null>>;
 	animateTo: (target: MoodVals, onDone?: () => void) => void;
 	valsRef: { current: MoodVals };
+	onSave: (name: string) => void;
+	disabled?: boolean;
 }
 
 export default function SavePresetBtn({
@@ -16,31 +37,40 @@ export default function SavePresetBtn({
 	setLabel,
 	setActive,
 	animateTo,
-	valsRef
+	valsRef,
+	onSave,
+	disabled = false
 }: SavePresetBtnProps) {
 	const [savedVibes, setSaved] = useState<SavedVibe[]>([]);
 	const [showInput, setShowInput] = useState(false);
-	const [notice, setNotice] = useState('');
+
+	// Hydrate from localStorage on mount
+	useEffect(() => {
+		setSaved(loadVibes());
+	}, []);
 
 	const applyVibe = useCallback(
 		(vibe: SavedVibe) => {
 			setActive(null);
 			animateTo(vibe.values);
 		},
-		[animateTo]
+		[animateTo, setActive]
 	);
 
 	const handleSave = () => {
 		const name = label.trim();
 		if (!name) return;
-		setSaved((prev) => [
-			...prev.slice(-4),
+
+		const next: SavedVibe[] = [
+			...savedVibes.slice(-4),
 			{ id: Date.now(), name, values: { ...valsRef.current } }
-		]);
+		];
+
+		setSaved(next);
+		persistVibes(next);
 		setLabel('');
 		setShowInput(false);
-		setNotice('Vibe bottled ✦');
-		setTimeout(() => setNotice(''), 2200);
+		onSave(name);
 	};
 
 	return (
@@ -95,6 +125,7 @@ export default function SavePresetBtn({
 							key={v.id}
 							className={styles.vibeChip}
 							onClick={() => applyVibe(v)}
+							disabled={disabled}
 						>
 							{v.name}
 						</button>
