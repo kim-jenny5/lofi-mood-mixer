@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
-import type { SliderConfig } from './constants';
-import styles from './LofiMoodMixer.module.css';
+import type { SliderConfig } from '../constants';
+import styles from './ControlPanel.module.css';
 
 interface MoodSliderProps {
 	config: SliderConfig;
