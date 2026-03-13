@@ -1,20 +1,14 @@
 'use client';
 
-import {
-	useState,
-	useEffect,
-	useRef,
-	useCallback,
-	useLayoutEffect
-} from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
-import { lerp } from './utils';
-import { engine } from './AudioEngine';
+import { animateMoodVals } from './utils';
+// import { engine } from './AudioEngine';
 import { INIT, PRESETS, SLIDERS } from './constants';
 import type { MoodVals, Preset, SavedVibe } from './constants';
 import CampingScene from './CampingScene';
 import MoodSlider from './MoodSlider';
-import styles from './LofiMoodMixer.module.scss';
+import styles from './LofiMoodMixer.module.css';
 
 export default function LofiMoodMixer() {
 	const [vals, setVals] = useState<MoodVals>(INIT);
@@ -25,43 +19,31 @@ export default function LofiMoodMixer() {
 	const [label, setLabel] = useState('');
 	const [notice, setNotice] = useState('');
 	const valsRef = useRef(vals);
-	const animRef = useRef<number | null>(null);
+	const animRef = useRef<{ cancel: () => void } | null>(null);
 
 	useEffect(() => {
 		valsRef.current = vals;
 	}, [vals]);
 
-	// Font injection
-	useLayoutEffect(() => {
-		if (document.getElementById('lofi-fonts')) return;
-		const link = document.createElement('link');
-		link.id = 'lofi-fonts';
-		link.rel = 'stylesheet';
-		link.href =
-			'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500;600&display=swap';
-		document.head.appendChild(link);
+	useEffect(() => {
+		return () => {
+			animRef.current?.cancel();
+		};
 	}, []);
 
-	// ── Animation helper ──────────────────────────────────────────────────────────
-
 	const animateTo = useCallback((target: MoodVals, onDone?: () => void) => {
-		if (animRef.current) cancelAnimationFrame(animRef.current);
-		const start = { ...valsRef.current };
-		const t0 = performance.now();
-		const dur = 1600;
-		const step = (now: number) => {
-			const p = Math.min((now - t0) / dur, 1);
-			const ease = 1 - Math.pow(1 - p, 3);
-			setVals({
-				time: Math.round(lerp(start.time, target.time, ease)),
-				warmth: Math.round(lerp(start.warmth, target.warmth, ease)),
-				weather: Math.round(lerp(start.weather, target.weather, ease)),
-				nature: Math.round(lerp(start.nature, target.nature, ease))
-			});
-			if (p < 1) animRef.current = requestAnimationFrame(step);
-			else onDone?.();
-		};
-		animRef.current = requestAnimationFrame(step);
+		animRef.current?.cancel();
+
+		animRef.current = animateMoodVals({
+			from: valsRef.current,
+			to: target,
+			duration: 1600,
+			onUpdate: setVals,
+			onDone: () => {
+				animRef.current = null;
+				onDone?.();
+			}
+		});
 	}, []);
 
 	const applyPreset = useCallback(
@@ -85,36 +67,30 @@ export default function LofiMoodMixer() {
 		[animateTo]
 	);
 
-	// ── Audio sync ────────────────────────────────────────────────────────────────
+	// Audio sync
+	// useEffect(() => {
+	// 	if (playing) {
+	// 		engine.setRain(vals.weather / 100);
+	// 		engine.setNature(vals.nature / 100);
+	// 	}
+	// }, [vals.weather, vals.nature, playing]);
 
-	useEffect(() => {
-		if (playing) {
-			engine.setRain(vals.weather / 100);
-			engine.setNature(vals.nature / 100);
-		}
-	}, [vals.weather, vals.nature, playing]);
+	// const togglePlay = () => {
+	// 	if (!playing) {
+	// 		engine.init();
+	// 		engine.play();
+	// 	} else engine.pause();
+	// 	setPlaying((p) => !p);
+	// };
 
-	const togglePlay = () => {
-		if (!playing) {
-			engine.init();
-			engine.play();
-		} else engine.pause();
-		setPlaying((p) => !p);
-	};
-
-	// ── Slider change ─────────────────────────────────────────────────────────────
-
-	const handleChange = (key: keyof MoodVals, v: number) => {
+	const handleSlider = (key: keyof MoodVals, v: number) => {
 		setActive(null);
-		if (animRef.current) {
-			cancelAnimationFrame(animRef.current);
-			animRef.current = null;
-		}
+		animRef.current?.cancel();
+		animRef.current = null;
 		setVals((prev) => ({ ...prev, [key]: v }));
 	};
 
-	// ── Save vibe ─────────────────────────────────────────────────────────────────
-
+	// Save vibe
 	const handleSave = () => {
 		const name = label.trim();
 		if (!name) return;
@@ -128,8 +104,7 @@ export default function LofiMoodMixer() {
 		setTimeout(() => setNotice(''), 2200);
 	};
 
-	// ── Render ────────────────────────────────────────────────────────────────────
-
+	// Render
 	return (
 		<div className={styles.app}>
 			{/* Scene */}
@@ -138,7 +113,7 @@ export default function LofiMoodMixer() {
 			{/* Header */}
 			<header className={styles.header}>
 				<h1 className={styles.title}>Lofi Mood Mixer</h1>
-				<p className={styles.tagline}>Dial in your dream. Let the rest fade.</p>
+				<p className={styles.tagline}>A little calm, on demand.</p>
 			</header>
 
 			{/* Notification */}
@@ -177,7 +152,7 @@ export default function LofiMoodMixer() {
 							key={s.key}
 							config={s}
 							value={vals[s.key]}
-							onChange={(v) => handleChange(s.key, v)}
+							onChange={(v) => handleSlider(s.key, v)}
 						/>
 					))}
 				</div>
@@ -251,7 +226,7 @@ export default function LofiMoodMixer() {
 					<div className={styles.panelPlayRow}>
 						<button
 							className={`${styles.playBtn}${playing ? ` ${styles.playBtnOn}` : ''}`}
-							onClick={togglePlay}
+							// onClick={togglePlay}
 							title={playing ? 'Pause' : 'Play ambience'}
 						>
 							{playing ? '⏸' : '▶'}

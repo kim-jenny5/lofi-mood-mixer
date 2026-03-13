@@ -1,5 +1,6 @@
+import { useRef, useEffect } from 'react';
 import type { SliderConfig } from './constants';
-import styles from './LofiMoodMixer.module.scss';
+import styles from './LofiMoodMixer.module.css';
 
 interface MoodSliderProps {
 	config: SliderConfig;
@@ -12,6 +13,18 @@ export default function MoodSlider({
 	value,
 	onChange
 }: MoodSliderProps) {
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		inputRef.current?.style.setProperty('--p', `${value}%`);
+	}, [value]);
+
+	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const v = Number(e.target.value);
+		e.currentTarget.style.setProperty('--p', `${v}%`);
+		onChange(v);
+	};
+
 	return (
 		<div className={styles.sliderRow}>
 			<div className={styles.sliderHead}>
@@ -22,13 +35,14 @@ export default function MoodSlider({
 				</div>
 			</div>
 			<input
+				ref={inputRef}
 				type='range'
 				min={0}
 				max={100}
 				value={value}
 				className={styles.moodSlider}
 				style={{ '--p': `${value}%` } as React.CSSProperties}
-				onChange={(e) => onChange(Number(e.target.value))}
+				onChange={handleInput}
 			/>
 		</div>
 	);
