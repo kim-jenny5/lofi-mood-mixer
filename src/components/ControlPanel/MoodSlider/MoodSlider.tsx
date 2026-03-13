@@ -1,6 +1,7 @@
-import { useRef, useEffect } from 'react';
-import type { SliderConfig } from '../constants';
-import styles from './ControlPanel.module.css';
+import { useEffect, useRef } from 'react';
+
+import type { SliderConfig } from '../../../lib/constants';
+import styles from './MoodSlider.module.css';
 
 interface MoodSliderProps {
 	config: SliderConfig;

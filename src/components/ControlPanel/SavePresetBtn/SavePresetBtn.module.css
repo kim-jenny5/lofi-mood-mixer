@@ -1,0 +1,90 @@
+.saveSection {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.saveRow {
+	display: flex;
+	gap: 7px;
+}
+
+.saveInput {
+	flex: 1;
+	font-family: 'Jost', sans-serif;
+	font-size: 0.73rem;
+	padding: 8px 12px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 195, 118, 0.22);
+	background: rgba(255, 195, 92, 0.06);
+	color: rgba(255, 228, 188, 0.9);
+	outline: none;
+	transition: border-color 0.2s ease;
+}
+
+.saveInput::placeholder {
+	color: rgba(255, 195, 118, 0.32);
+}
+
+.saveInput:focus {
+	border-color: rgba(255, 195, 118, 0.48);
+}
+
+.saveBtn {
+	font-family: 'Jost', sans-serif;
+	font-size: 0.7rem;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	padding: 8px 14px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 175, 72, 0.38);
+	background: rgba(255, 175, 55, 0.13);
+	color: rgba(255, 212, 138, 0.95);
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.2s ease;
+}
+
+.saveBtn:hover {
+	background: rgba(255, 175, 55, 0.26);
+	border-color: rgba(255, 175, 72, 0.58);
+	color: rgba(255, 228, 165, 1);
+}
+
+.saveBtn:active {
+	transform: scale(0.95);
+}
+
+.saveBtnFull {
+	width: 100%;
+	text-align: center;
+}
+
+.savedVibes {
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+}
+
+.vibeChip {
+	font-family: 'Jost', sans-serif;
+	font-size: 0.63rem;
+	font-weight: 400;
+	padding: 4px 10px;
+	border-radius: 16px;
+	cursor: pointer;
+	border: 1px solid rgba(155, 195, 255, 0.18);
+	background: rgba(155, 195, 255, 0.06);
+	color: rgba(195, 222, 255, 0.68);
+	transition: all 0.2s ease;
+}
+
+.vibeChip:hover {
+	background: rgba(155, 195, 255, 0.14);
+	border-color: rgba(155, 195, 255, 0.38);
+	color: rgba(215, 235, 255, 0.95);
+}
+
+.vibeChip:active {
+	transform: scale(0.94);
+}

@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-import { animateMoodVals } from '../utils';
-import { PRESETS, SLIDERS } from '../constants';
-import type { MoodVals, Preset } from '../constants';
-import MoodSlider from './MoodSlider';
+import type { MoodVals, Preset } from '../../lib/constants';
+import { PRESETS, SLIDERS } from '../../lib/constants';
+import { animateMoodVals } from '@/lib/utils';
 import styles from './ControlPanel.module.css';
-import SavePreset from './SavePreset';
+import MoodSlider from './MoodSlider/MoodSlider';
+import NowPlayingBar from './NowPlayingBar/NowPlayingBar';
+import SavePresetBtn from './SavePresetBtn/SavePresetBtn';
 
 interface ControlPanelProps {
 	vals: MoodVals;
@@ -22,7 +23,6 @@ export default function ControlPanel({
 	valsRef,
 	setVals
 }: ControlPanelProps) {
-	const [playing, setPlaying] = useState(false);
 	const [activePreset, setActive] = useState<string | null>('campfire');
 	const [label, setLabel] = useState('');
 
@@ -75,9 +75,7 @@ export default function ControlPanel({
 			>
 				{notice}
 			</div> */}
-
 			<div className={styles.panel}>
-				{/* Presets */}
 				<div className={styles.sectionLabel}>Presets</div>
 				<div className={styles.presetRow}>
 					{PRESETS.map((p) => (
@@ -90,10 +88,7 @@ export default function ControlPanel({
 						</button>
 					))}
 				</div>
-
 				<div className={styles.divider} />
-
-				{/* Sliders */}
 				<div className={styles.sliders}>
 					{SLIDERS.map((s) => (
 						<MoodSlider
@@ -104,9 +99,8 @@ export default function ControlPanel({
 						/>
 					))}
 				</div>
-
 				<div className={styles.divider} />
-				<SavePreset
+				<SavePresetBtn
 					label={label}
 					setLabel={setLabel}
 					setActive={setActive}
@@ -114,40 +108,7 @@ export default function ControlPanel({
 					valsRef={valsRef}
 				/>
 				<div className={styles.divider} />
-
-				{/* Play row + badges + now playing */}
-				<div className={styles.panelFooter}>
-					<div className={styles.panelPlayRow}>
-						<button
-							className={`${styles.playBtn}${playing ? ` ${styles.playBtnOn}` : ''}`}
-							title={playing ? 'Pause' : 'Play ambience'}
-						>
-							{playing ? '⏸' : '▶'}
-						</button>
-						<div className={styles.soundBadges}>
-							<div
-								className={`${styles.badge}${vals.weather > 15 ? ` ${styles.badgeActive}` : ''}`}
-							>
-								{vals.weather > 15 ? `🌧 Rain ${vals.weather}%` : '☀ Clear'}
-							</div>
-							<div
-								className={`${styles.badge}${vals.nature > 18 ? ` ${styles.badgeActive}` : ''}`}
-							>
-								{vals.nature > 18 ? `🍃 Nature ${vals.nature}%` : '🔇 Quiet'}
-							</div>
-							{playing && (
-								<div className={`${styles.badge} ${styles.badgeActive}`}>
-									♪ Lofi stream
-								</div>
-							)}
-						</div>
-					</div>
-					<div
-						className={`${styles.nowPlaying}${playing ? ` ${styles.nowPlayingActive}` : ''}`}
-					>
-						{playing ? '♩ Now playing' : 'Now playing'}
-					</div>
-				</div>
+				<NowPlayingBar vals={vals} />
 			</div>
 		</>
 	);

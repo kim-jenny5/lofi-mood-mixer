@@ -1,6 +1,6 @@
-import { lerp, clamp, n01, computeSky } from './utils';
-import { STARS, FIREFLIES, RAIN } from './constants';
-import type { MoodVals } from './constants';
+import type { MoodVals } from '../lib/constants';
+import { FIREFLIES, RAIN, STARS } from '../lib/constants';
+import { clamp, computeSky, lerp, n01 } from '@/lib/utils';
 
 // ─── Snow geometry helpers ─────────────────────────────────────────────────────
 

@@ -1,14 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import Header from './Header/Header';
-import ControlPanel from './ControlPanel/ControlPanel';
-
-// import { engine } from './AudioEngine';
-import { INIT } from './constants';
-import type { MoodVals } from './constants';
 import CampingScene from './CampingScene';
+import type { MoodVals } from '../lib/constants';
+// import { engine } from './AudioEngine';
+import { INIT } from '../lib/constants';
+import ControlPanel from './ControlPanel/ControlPanel';
+import Header from './Header/Header';
 import styles from './LofiMoodMixer.module.css';
 
 export default function LofiMoodMixer() {

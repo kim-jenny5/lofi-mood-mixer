@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react';
-import type { MoodVals, SavedVibe } from '../constants';
-import styles from './ControlPanel.module.css';
+import { useCallback, useState } from 'react';
 
-interface SavePresetProps {
+import type { MoodVals, SavedVibe } from '../../../lib/constants';
+import styles from './SavePresetBtn.module.css';
+
+interface SavePresetBtnProps {
 	label: string;
 	setLabel: React.Dispatch<React.SetStateAction<string>>;
 	setActive: React.Dispatch<React.SetStateAction<string | null>>;
@@ -10,13 +11,13 @@ interface SavePresetProps {
 	valsRef: { current: MoodVals };
 }
 
-export default function SavePreset({
+export default function SavePresetBtn({
 	label,
 	setLabel,
 	setActive,
 	animateTo,
 	valsRef
-}: SavePresetProps) {
+}: SavePresetBtnProps) {
 	const [savedVibes, setSaved] = useState<SavedVibe[]>([]);
 	const [showInput, setShowInput] = useState(false);
 	const [notice, setNotice] = useState('');
