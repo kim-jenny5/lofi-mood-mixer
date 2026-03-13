@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import CampingScene from './CampingScene';
 import type { MoodVals } from '../lib/constants';
-// import { engine } from './AudioEngine';
 import { INIT } from '../lib/constants';
 import ControlPanel from './ControlPanel/ControlPanel';
-import Header from './Header/Header';
 import styles from './LofiMoodMixer.module.css';
 
 export default function LofiMoodMixer() {
@@ -25,26 +23,9 @@ export default function LofiMoodMixer() {
 		};
 	}, []);
 
-	// Audio sync
-	// useEffect(() => {
-	// 	if (playing) {
-	// 		engine.setRain(vals.weather / 100);
-	// 		engine.setNature(vals.nature / 100);
-	// 	}
-	// }, [vals.weather, vals.nature, playing]);
-
-	// const togglePlay = () => {
-	// 	if (!playing) {
-	// 		engine.init();
-	// 		engine.play();
-	// 	} else engine.pause();
-	// 	setPlaying((p) => !p);
-	// };
-
 	return (
 		<div className={styles.app}>
 			<CampingScene {...vals} />
-			<Header />
 			<ControlPanel
 				vals={vals}
 				animRef={animRef}

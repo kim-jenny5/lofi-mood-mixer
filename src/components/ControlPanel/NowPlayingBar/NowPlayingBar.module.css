@@ -51,21 +51,23 @@
 .soundBadges {
 	display: flex;
 	flex-direction: row;
-	gap: 5px;
-	flex-wrap: wrap;
+	gap: 4px;
+	flex-wrap: nowrap;
 	align-items: center;
+	overflow: hidden;
 }
 
 .badge {
-	font-size: 0.58rem;
+	font-size: 0.56rem;
 	font-weight: 500;
-	letter-spacing: 0.08em;
-	padding: 4px 9px;
+	letter-spacing: 0.06em;
+	padding: 4px 7px;
 	border-radius: 12px;
 	background: rgba(8, 5, 20, 0.42);
 	border: 1px solid rgba(255, 228, 185, 0.12);
 	color: rgba(255, 218, 158, 0.45);
 	transition: all 0.8s ease;
+	white-space: nowrap;
 }
 
 .badgeActive {
