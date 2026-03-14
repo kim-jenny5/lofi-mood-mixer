@@ -22,7 +22,6 @@ export default function PresetDrawer({
 }: PresetDrawerProps) {
 	return (
 		<div className={styles.drawerInner}>
-			{/* Factory presets */}
 			<div className={styles.section}>
 				<span className={styles.sectionLabel}>Factory</span>
 				<div className={styles.list}>
@@ -38,12 +37,9 @@ export default function PresetDrawer({
 					))}
 				</div>
 			</div>
-
 			<div className={styles.divider} />
-
-			{/* Custom saved vibes */}
 			<div className={styles.section}>
-				<span className={styles.sectionLabel}>Custom</span>
+				<span className={styles.sectionLabel}>Your Vibes</span>
 				<div className={styles.list}>
 					{savedVibes.length === 0 ? (
 						<p className={styles.empty}>No vibes saved yet</p>

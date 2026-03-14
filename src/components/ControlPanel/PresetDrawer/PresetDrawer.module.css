@@ -1,16 +1,33 @@
-/* drawerInner fills the height of the motion wrapper */
 .drawerInner {
 	width: 168px;
-	max-height: calc(100vh - 80px);
 	display: flex;
 	flex-direction: column;
 	gap: 0;
-	padding: 18px 14px 18px 14px;
+	padding: 18px 14px;
 	background: rgba(7, 5, 18, 0.82);
 	backdrop-filter: blur(20px) saturate(1.35);
 	border: 1px solid rgba(255, 215, 155, 0.11);
 	border-radius: 22px;
 	overflow: visible;
+}
+
+@media (max-width: 480px) {
+	.drawerInner {
+		width: 100%;
+		flex-direction: row;
+		flex-wrap: wrap;
+		padding: 14px;
+		gap: 8px;
+	}
+
+	.section {
+		flex: 1;
+		min-width: 120px;
+	}
+
+	.divider {
+		display: none;
+	}
 }
 
 .section {

@@ -14,8 +14,6 @@
 	white-space: nowrap;
 }
 
-/* .panel styles moved to layout section below */
-
 .sectionLabel {
 	font-size: 0.58rem;
 	font-weight: 500;
@@ -33,7 +31,6 @@
 }
 
 .chip {
-	font-family: 'Jost', sans-serif;
 	font-size: 0.68rem;
 	font-weight: 500;
 	padding: 5px 11px;
@@ -76,14 +73,14 @@
 	gap: 13px;
 }
 
-/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+/* Layout */
 .panelRow {
 	position: absolute;
 	bottom: 26px;
 	left: 26px;
 	z-index: 20;
 	display: flex;
-	flex-direction: row;
+	flex-direction: row-reverse;
 	align-items: flex-end;
 	gap: 10px;
 	max-width: calc(100vw - 52px);
@@ -113,7 +110,7 @@
 	display: none;
 }
 
-/* ─── Panel top row ──────────────────────────────────────────────────────────── */
+/* Panel top row */
 .panelTopRow {
 	display: flex;
 	align-items: center;
@@ -121,7 +118,7 @@
 	margin-bottom: 2px;
 }
 
-/* ─── Presets toggle button ──────────────────────────────────────────────────── */
+/* Presets toggle button */
 .presetsBtn {
 	display: inline-flex;
 	align-items: center;
@@ -142,7 +139,8 @@
 }
 
 .presetsBtn:focus-visible {
-	outline: none;
+	outline: 1.5px solid rgba(255, 195, 118, 0.55);
+	outline-offset: 2px;
 }
 
 .presetsBtn:hover {
@@ -160,4 +158,33 @@
 	border-color: rgba(255, 178, 72, 0.45);
 	color: rgba(255, 222, 148, 0.98);
 	box-shadow: 0 0 12px rgba(255, 175, 52, 0.12);
+}
+
+/* Mobile layout */
+@media (max-width: 480px) {
+	.panelRow {
+		flex-direction: column-reverse;
+		align-items: stretch;
+		bottom: 16px;
+		left: 16px;
+		right: 16px;
+		max-width: 100%;
+		max-height: calc(100vh - 32px);
+		overflow: hidden;
+	}
+
+	.panel {
+		width: 100%;
+		overflow-y: auto;
+		flex-shrink: 1;
+		min-height: 0;
+	}
+}
+
+.panelRowMobile {
+	flex-direction: column-reverse;
+}
+
+.panelRowMobile .drawerWrapper {
+	width: 100%;
 }

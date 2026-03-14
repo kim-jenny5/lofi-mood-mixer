@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-import { PanelLeftOpen, PanelLeftClose } from 'lucide-react';
+import {
+	PanelLeftOpen,
+	PanelLeftClose,
+	PanelTopOpen,
+	PanelTopClose
+} from 'lucide-react';
 import type { MoodVals, Preset, SavedVibe } from '../../lib/constants';
 import { PRESETS, SLIDERS } from '../../lib/constants';
 import { animateMoodVals } from '@/lib/utils';
@@ -57,6 +62,15 @@ export default function ControlPanel({
 	});
 	const [savedVibes, setSavedVibes] = useState<SavedVibe[]>([]);
 	const panelRowRef = useRef<HTMLDivElement>(null);
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const mq = window.matchMedia('(max-width: 480px)');
+		setIsMobile(mq.matches);
+		const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+		mq.addEventListener('change', handler);
+		return () => mq.removeEventListener('change', handler);
+	}, []);
 
 	useEffect(() => {
 		if (!drawerOpen) return;
@@ -148,29 +162,10 @@ export default function ControlPanel({
 					</motion.div>
 				)}
 			</AnimatePresence>
-			<div className={styles.panelRow} ref={panelRowRef}>
-				<motion.div
-					className={styles.drawerWrapper}
-					animate={{
-						width: drawerOpen ? 178 : 0,
-						opacity: drawerOpen ? 1 : 0
-					}}
-					transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-					style={{ overflowX: 'hidden', overflowY: 'visible', flexShrink: 0 }}
-				>
-					<PresetDrawer
-						presets={PRESETS}
-						savedVibes={savedVibes}
-						activePreset={activePreset}
-						onSelectPreset={applyPreset}
-						onSelectVibe={applyVibe}
-						onDeleteVibe={(id) => {
-							const next = savedVibes.filter((v) => v.id !== id);
-							setSavedVibes(next);
-							persistVibes(next);
-						}}
-					/>
-				</motion.div>
+			<div
+				className={`${styles.panelRow}${isMobile ? ` ${styles.panelRowMobile}` : ''}`}
+				ref={panelRowRef}
+			>
 				<motion.div
 					className={styles.panel}
 					layout
@@ -189,7 +184,13 @@ export default function ControlPanel({
 								})
 							}
 						>
-							{drawerOpen ? (
+							{isMobile ? (
+								drawerOpen ? (
+									<PanelTopClose size={13} strokeWidth={2} />
+								) : (
+									<PanelTopOpen size={13} strokeWidth={2} />
+								)
+							) : drawerOpen ? (
 								<PanelLeftClose size={13} strokeWidth={2} />
 							) : (
 								<PanelLeftOpen size={13} strokeWidth={2} />
@@ -218,6 +219,33 @@ export default function ControlPanel({
 					/>
 					<div className={styles.divider} />
 					<NowPlayingBar vals={vals} />
+				</motion.div>
+				<motion.div
+					className={styles.drawerWrapper}
+					animate={
+						isMobile
+							? { height: drawerOpen ? 'auto' : 0, opacity: drawerOpen ? 1 : 0 }
+							: { width: drawerOpen ? 178 : 0, opacity: drawerOpen ? 1 : 0 }
+					}
+					transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+					style={
+						isMobile
+							? { overflowX: 'visible', overflowY: 'hidden', width: '100%' }
+							: { overflowX: 'hidden', overflowY: 'visible', flexShrink: 0 }
+					}
+				>
+					<PresetDrawer
+						presets={PRESETS}
+						savedVibes={savedVibes}
+						activePreset={activePreset}
+						onSelectPreset={applyPreset}
+						onSelectVibe={applyVibe}
+						onDeleteVibe={(id) => {
+							const next = savedVibes.filter((v) => v.id !== id);
+							setSavedVibes(next);
+							persistVibes(next);
+						}}
+					/>
 				</motion.div>
 			</div>
 		</>
