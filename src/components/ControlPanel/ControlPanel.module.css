@@ -3,8 +3,6 @@
 	top: 24px;
 	left: 50%;
 	z-index: 50;
-	opacity: 1;
-	transform: translateX(-50%) translateY(0px);
 	background: rgba(14, 10, 28, 0.88);
 	backdrop-filter: blur(12px);
 	border: 1px solid rgba(255, 195, 95, 0.28);
@@ -13,38 +11,10 @@
 	border-radius: 20px;
 	font-size: 0.78rem;
 	pointer-events: none;
-	transition:
-		opacity 0.4s ease,
-		transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	white-space: nowrap;
 }
 
-.noticeHidden {
-	opacity: 0;
-	transform: translateX(-50%) translateY(-12px);
-}
-
-.panel {
-	position: absolute;
-	bottom: 26px;
-	left: 26px;
-	z-index: 20;
-	width: min(400px, calc(100vw - 52px));
-	max-height: calc(100vh - 80px);
-	overflow-y: auto;
-	background: rgba(7, 5, 18, 0.74);
-	backdrop-filter: blur(20px) saturate(1.35);
-	border: 1px solid rgba(255, 215, 155, 0.11);
-	border-radius: 22px;
-	padding: 20px 22px;
-	box-shadow:
-		0 8px 42px rgba(0, 0, 0, 0.52),
-		inset 0 1px 0 rgba(255, 225, 180, 0.07);
-	scrollbar-width: none;
-}
-
-.panel::-webkit-scrollbar {
-	display: none;
-}
+/* .panel styles moved to layout section below */
 
 .sectionLabel {
 	font-size: 0.58rem;
@@ -104,4 +74,85 @@
 	display: flex;
 	flex-direction: column;
 	gap: 13px;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+.panelRow {
+	position: absolute;
+	bottom: 26px;
+	left: 26px;
+	z-index: 20;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	gap: 10px;
+	max-width: calc(100vw - 52px);
+}
+
+.drawerWrapper {
+	max-height: calc(100vh - 80px);
+	align-self: flex-end;
+}
+
+.panel {
+	width: min(400px, calc(100vw - 52px));
+	max-height: calc(100vh - 80px);
+	overflow-y: auto;
+	background: rgba(7, 5, 18, 0.74);
+	backdrop-filter: blur(20px) saturate(1.35);
+	border: 1px solid rgba(255, 215, 155, 0.11);
+	border-radius: 22px;
+	padding: 20px 22px;
+	box-shadow:
+		0 8px 42px rgba(0, 0, 0, 0.52),
+		inset 0 1px 0 rgba(255, 225, 180, 0.07);
+	scrollbar-width: none;
+}
+
+.panel::-webkit-scrollbar {
+	display: none;
+}
+
+/* ─── Panel top row ──────────────────────────────────────────────────────────── */
+.panelTopRow {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 2px;
+}
+
+/* ─── Presets toggle button ──────────────────────────────────────────────────── */
+.presetsBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.58rem;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: rgba(255, 195, 118, 0.72);
+	background: rgba(255, 195, 92, 0.07);
+	border: 1px solid rgba(255, 195, 118, 0.18);
+	border-radius: 20px;
+	padding: 5px 11px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	white-space: nowrap;
+}
+
+.presetsBtn:hover {
+	background: rgba(255, 195, 92, 0.14);
+	border-color: rgba(255, 195, 118, 0.38);
+	color: rgba(255, 228, 185, 0.92);
+}
+
+.presetsBtn:active {
+	transform: scale(0.95);
+}
+
+.presetsBtnOpen {
+	background: rgba(255, 178, 55, 0.15);
+	border-color: rgba(255, 178, 72, 0.45);
+	color: rgba(255, 222, 148, 0.98);
+	box-shadow: 0 0 12px rgba(255, 175, 52, 0.12);
 }

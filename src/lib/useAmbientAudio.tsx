@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { MoodVals } from '@/lib/constants';
 
 const VIDEOS = {
@@ -75,7 +75,7 @@ function computeVolumes(vals: MoodVals) {
 	};
 }
 
-export function useAmbientAudio(vals: MoodVals) {
+export function useAmbientAudio(vals: MoodVals, playing: boolean) {
 	const rainDivRef = useRef<HTMLDivElement>(null);
 	const natureDayDivRef = useRef<HTMLDivElement>(null);
 	const natureNightDivRef = useRef<HTMLDivElement>(null);
@@ -83,8 +83,6 @@ export function useAmbientAudio(vals: MoodVals) {
 
 	const players = useRef<Partial<Record<keyof typeof VIDEOS, YT.Player>>>({});
 	const valsRef = useRef(vals);
-	const [ready, setReady] = useState(false);
-	const readyCount = useRef(0);
 
 	useEffect(() => {
 		valsRef.current = vals;
@@ -103,16 +101,12 @@ export function useAmbientAudio(vals: MoodVals) {
 				cozy: cozyDivRef.current
 			};
 
-			const total = Object.keys(VIDEOS).length;
-
 			(Object.keys(VIDEOS) as (keyof typeof VIDEOS)[]).forEach((key) => {
 				const el = divs[key];
 				if (!el) return;
 				players.current[key] = makePlayer(el, VIDEOS[key], () => {
-					const vols = computeVolumes(valsRef.current);
-					players.current[key]?.setVolume(vols[key]);
-					readyCount.current += 1;
-					if (!cancelled && readyCount.current >= total) setReady(true);
+					// Always start silent — volume is controlled by the playing effect
+					players.current[key]?.setVolume(0);
 				});
 			});
 		});
@@ -127,9 +121,9 @@ export function useAmbientAudio(vals: MoodVals) {
 	useEffect(() => {
 		const vols = computeVolumes(vals);
 		(Object.keys(vols) as (keyof typeof VIDEOS)[]).forEach((key) => {
-			players.current[key]?.setVolume(vols[key]);
+			players.current[key]?.setVolume(playing ? vols[key] : 0);
 		});
-	}, [vals]);
+	}, [vals, playing]);
 
-	return { rainDivRef, natureDayDivRef, natureNightDivRef, cozyDivRef, ready };
+	return { rainDivRef, natureDayDivRef, natureNightDivRef, cozyDivRef };
 }
