@@ -1,0 +1,184 @@
+.saveSection {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-height: 38px;
+}
+
+.bottleBtn {
+	width: 100%;
+	font-family: 'Jost', sans-serif;
+	font-size: 0.7rem;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	padding: 9px 16px;
+	border-radius: 24px;
+	border: 1px solid rgba(255, 175, 72, 0.32);
+	background: rgba(255, 175, 55, 0.09);
+	color: rgba(255, 212, 138, 0.82);
+	cursor: pointer;
+	text-align: center;
+	transition: all 0.2s ease;
+	outline: none;
+}
+
+.bottleBtn:hover {
+	background: rgba(255, 175, 55, 0.18);
+	border-color: rgba(255, 175, 72, 0.52);
+	color: rgba(255, 228, 165, 1);
+}
+
+.bottleBtn:active {
+	transform: scale(0.97);
+}
+
+.pillWrapper {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.pillDismiss {
+	background: none;
+	border: none;
+	color: rgba(255, 195, 118, 0.35);
+	font-size: 0.82rem;
+	cursor: pointer;
+	padding: 4px 6px;
+	flex-shrink: 0;
+	outline: none;
+	transition: color 0.18s ease-in;
+}
+
+.pillDismiss:hover {
+	color: rgba(255, 195, 118, 0.75);
+	border-radius: 50%;
+	background: rgba(255, 195, 118, 0.25);
+}
+
+.pill {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	border-radius: 24px;
+	border: 1px solid rgba(255, 175, 72, 0.38);
+	background: rgba(255, 175, 55, 0.07);
+	padding: 0 4px 0 14px;
+	transition: border-color 0.2s ease;
+}
+
+.pill:focus-within {
+	border-color: rgba(255, 195, 118, 0.55);
+	background: rgba(255, 175, 55, 0.11);
+}
+
+.pillInput {
+	flex: 1;
+	font-family: 'Jost', sans-serif;
+	font-size: 0.73rem;
+	padding: 9px 0;
+	background: none;
+	border: none;
+	outline: none;
+	color: rgba(255, 228, 188, 0.9);
+}
+
+.pillInput::placeholder {
+	color: rgba(255, 195, 118, 0.32);
+}
+
+.pillSave {
+	padding: 6px 10px;
+	border-radius: 20px;
+	border: none;
+	background: none;
+	color: rgba(255, 195, 118, 0.28);
+	font-size: 0.68rem;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	white-space: nowrap;
+	transition: all 0.2s ease;
+	outline: none;
+}
+
+.pillSaveReady {
+	color: rgba(255, 212, 138, 0.9);
+	background: rgba(255, 175, 55, 0.15);
+}
+
+.pillSaveReady:hover {
+	background: rgba(255, 175, 55, 0.28);
+	color: rgba(255, 228, 165, 1);
+}
+
+.savedVibes {
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+}
+
+.vibeChipWrapper {
+	position: relative;
+	display: inline-flex;
+}
+
+.vibeChipWrapper .vibeDelete {
+	display: none;
+}
+
+.vibeChipWrapper:hover .vibeDelete {
+	display: flex;
+}
+
+.vibeChip {
+	font-family: 'Jost', sans-serif;
+	font-size: 0.63rem;
+	font-weight: 400;
+	padding: 4px 10px;
+	border-radius: 16px;
+	cursor: pointer;
+	border: 1px solid rgba(155, 195, 255, 0.18);
+	background: rgba(155, 195, 255, 0.06);
+	color: rgba(195, 222, 255, 0.68);
+	transition: all 0.2s ease;
+}
+
+.vibeChip:hover {
+	background: rgba(155, 195, 255, 0.14);
+	border-color: rgba(155, 195, 255, 0.38);
+	color: rgba(215, 235, 255, 0.95);
+}
+
+.vibeChip:active {
+	transform: scale(0.94);
+}
+
+.vibeDelete {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	border: 1px solid rgba(155, 195, 255, 0.25);
+	background: rgba(14, 10, 28, 0.92);
+	color: rgba(195, 222, 255, 0.7);
+	font-size: 0.42rem;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	line-height: 1;
+	transition: all 0.15s ease;
+}
+
+.vibeDelete:hover {
+	background: rgba(255, 100, 100, 0.25);
+	border-color: rgba(255, 120, 120, 0.45);
+	color: rgba(255, 180, 180, 0.95);
+}
