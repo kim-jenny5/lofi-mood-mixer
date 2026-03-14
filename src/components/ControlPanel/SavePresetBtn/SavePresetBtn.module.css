@@ -2,6 +2,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
+	min-height: 38px;
 }
 
 /* ── Idle state: full-width bottle button ─────────────────────────────────── */
@@ -56,7 +57,7 @@
 	background: rgba(255, 195, 118, 0.25);
 }
 
-/* ── Active state: single pill with input + ✦ icon ───────────────────────── */
+/* ── Active state: single pill with input + save button ──────────────────── */
 .pill {
 	display: flex;
 	align-items: center;
@@ -117,10 +118,24 @@
 	color: rgba(255, 228, 165, 1);
 }
 
+/* ── Saved vibes ─────────────────────────────────────────────────────────── */
 .savedVibes {
 	display: flex;
 	gap: 5px;
 	flex-wrap: wrap;
+}
+
+.vibeChipWrapper {
+	position: relative;
+	display: inline-flex;
+}
+
+.vibeChipWrapper .vibeDelete {
+	display: none;
+}
+
+.vibeChipWrapper:hover .vibeDelete {
+	display: flex;
 }
 
 .vibeChip {
@@ -144,4 +159,29 @@
 
 .vibeChip:active {
 	transform: scale(0.94);
+}
+
+.vibeDelete {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	border: 1px solid rgba(155, 195, 255, 0.25);
+	background: rgba(14, 10, 28, 0.92);
+	color: rgba(195, 222, 255, 0.7);
+	font-size: 0.42rem;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	line-height: 1;
+	transition: all 0.15s ease;
+}
+
+.vibeDelete:hover {
+	background: rgba(255, 100, 100, 0.25);
+	border-color: rgba(255, 120, 120, 0.45);
+	color: rgba(255, 180, 180, 0.95);
 }

@@ -9,6 +9,7 @@ interface PresetDrawerProps {
 	activePreset: string | null;
 	onSelectPreset: (preset: Preset) => void;
 	onSelectVibe: (vibe: SavedVibe) => void;
+	onDeleteVibe: (id: number) => void;
 }
 
 export default function PresetDrawer({
@@ -16,12 +17,14 @@ export default function PresetDrawer({
 	savedVibes,
 	activePreset,
 	onSelectPreset,
-	onSelectVibe
+	onSelectVibe,
+	onDeleteVibe
 }: PresetDrawerProps) {
 	return (
 		<div className={styles.drawerInner}>
+			{/* Factory presets */}
 			<div className={styles.section}>
-				<span className={styles.sectionLabel}>Scenes</span>
+				<span className={styles.sectionLabel}>Factory</span>
 				<div className={styles.list}>
 					{presets.map((p) => (
 						<button
@@ -35,22 +38,30 @@ export default function PresetDrawer({
 					))}
 				</div>
 			</div>
+
 			<div className={styles.divider} />
+
+			{/* Custom saved vibes */}
 			<div className={styles.section}>
-				<span className={styles.sectionLabel}>Your Vibes</span>
+				<span className={styles.sectionLabel}>Custom</span>
 				<div className={styles.list}>
 					{savedVibes.length === 0 ? (
 						<p className={styles.empty}>No vibes saved yet</p>
 					) : (
 						savedVibes.map((v) => (
-							<button
-								key={v.id}
-								className={styles.item}
-								onClick={() => onSelectVibe(v)}
-							>
-								<span className={styles.emoji}>✦</span>
-								<span className={styles.name}>{v.name}</span>
-							</button>
+							<div key={v.id} className={styles.itemWrapper}>
+								<button className={styles.item} onClick={() => onSelectVibe(v)}>
+									<span className={styles.emoji}>✦</span>
+									<span className={styles.name}>{v.name}</span>
+								</button>
+								<button
+									className={styles.deleteBtn}
+									onClick={() => onDeleteVibe(v.id)}
+									title='Delete'
+								>
+									✕
+								</button>
+							</div>
 						))
 					)}
 				</div>

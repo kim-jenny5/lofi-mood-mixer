@@ -48,7 +48,13 @@ export default function ControlPanel({
 	const [activePreset, setActive] = useState<string | null>('campfire');
 	const [notice, setNotice] = useState('');
 	const [label, setLabel] = useState('');
-	const [drawerOpen, setDrawerOpen] = useState(true);
+	const [drawerOpen, setDrawerOpen] = useState(() => {
+		try {
+			return localStorage.getItem('lofi-drawer-open') !== 'false';
+		} catch {
+			return true;
+		}
+	});
 	const [savedVibes, setSavedVibes] = useState<SavedVibe[]>([]);
 	const panelRowRef = useRef<HTMLDivElement>(null);
 
@@ -142,9 +148,7 @@ export default function ControlPanel({
 					</motion.div>
 				)}
 			</AnimatePresence>
-
 			<div className={styles.panelRow} ref={panelRowRef}>
-				{/* Drawer — always mounted, animates width so no snap on close */}
 				<motion.div
 					className={styles.drawerWrapper}
 					animate={{
@@ -152,7 +156,7 @@ export default function ControlPanel({
 						opacity: drawerOpen ? 1 : 0
 					}}
 					transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-					style={{ overflow: 'hidden', flexShrink: 0 }}
+					style={{ overflowX: 'hidden', overflowY: 'visible', flexShrink: 0 }}
 				>
 					<PresetDrawer
 						presets={PRESETS}
@@ -160,10 +164,13 @@ export default function ControlPanel({
 						activePreset={activePreset}
 						onSelectPreset={applyPreset}
 						onSelectVibe={applyVibe}
+						onDeleteVibe={(id) => {
+							const next = savedVibes.filter((v) => v.id !== id);
+							setSavedVibes(next);
+							persistVibes(next);
+						}}
 					/>
 				</motion.div>
-
-				{/* Main panel — layout-animated so it glides when drawer opens */}
 				<motion.div
 					className={styles.panel}
 					layout
@@ -172,7 +179,15 @@ export default function ControlPanel({
 					<div className={styles.panelTopRow}>
 						<button
 							className={`${styles.presetsBtn}${drawerOpen ? ` ${styles.presetsBtnOpen}` : ''}`}
-							onClick={() => setDrawerOpen((o) => !o)}
+							onClick={() =>
+								setDrawerOpen((o) => {
+									const next = !o;
+									try {
+										localStorage.setItem('lofi-drawer-open', String(next));
+									} catch {}
+									return next;
+								})
+							}
 						>
 							{drawerOpen ? (
 								<PanelLeftClose size={13} strokeWidth={2} />
@@ -199,9 +214,6 @@ export default function ControlPanel({
 					<SavePresetBtn
 						label={label}
 						setLabel={setLabel}
-						setActive={setActive}
-						animateTo={animateTo}
-						valsRef={valsRef}
 						onSave={handleSave}
 					/>
 					<div className={styles.divider} />
