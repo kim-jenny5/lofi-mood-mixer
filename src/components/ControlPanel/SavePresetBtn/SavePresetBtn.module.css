@@ -5,7 +5,6 @@
 	min-height: 38px;
 }
 
-/* ── Idle state: full-width bottle button ─────────────────────────────────── */
 .bottleBtn {
 	width: 100%;
 	font-family: 'Jost', sans-serif;
@@ -57,7 +56,6 @@
 	background: rgba(255, 195, 118, 0.25);
 }
 
-/* ── Active state: single pill with input + save button ──────────────────── */
 .pill {
 	display: flex;
 	align-items: center;
@@ -118,7 +116,6 @@
 	color: rgba(255, 228, 165, 1);
 }
 
-/* ── Saved vibes ─────────────────────────────────────────────────────────── */
 .savedVibes {
 	display: flex;
 	gap: 5px;

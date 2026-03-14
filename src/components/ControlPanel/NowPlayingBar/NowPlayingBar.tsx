@@ -41,8 +41,9 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 	useEffect(() => {
 		const handleKey = (e: KeyboardEvent) => {
 			if (!ready) return;
-			// Don't fire when the user is typing in an input or textarea
+
 			const tag = (e.target as HTMLElement).tagName;
+
 			if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 			if (e.code === 'Space' || e.code === 'Enter') {
 				e.preventDefault();
@@ -60,9 +61,7 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 			<div ref={natureDayDivRef} style={hiddenPlayer} />
 			<div ref={natureNightDivRef} style={hiddenPlayer} />
 			<div ref={cozyDivRef} style={hiddenPlayer} />
-
 			<div className={styles.panelPlayRow}>
-				{/* Play/pause — icon rotates and scales between states */}
 				<motion.button
 					className={`${styles.playBtn}${playing ? ` ${styles.playBtnOn}` : ''}`}
 					onClick={toggle}
@@ -94,9 +93,6 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 						</motion.span>
 					</AnimatePresence>
 				</motion.button>
-
-				{/* Badges — order: Clear/Rain, Lofi Girl, Nature, Cozy
-				    popLayout pulls exiting badges out of flow so nothing snaps */}
 				<div className={styles.soundBadges}>
 					<AnimatePresence mode='popLayout' initial={false}>
 						{playing && (
@@ -109,7 +105,6 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 								♪ Lofi Girl
 							</motion.div>
 						)}
-
 						{vals.weather > 15 ? (
 							<motion.div
 								key='rain'
@@ -129,7 +124,6 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 								☀ Clear
 							</motion.div>
 						)}
-
 						{vals.nature > 18 ? (
 							<motion.div
 								key='nature'
@@ -149,7 +143,6 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 								🔇 Quiet
 							</motion.div>
 						)}
-
 						{vals.warmth > 70 && (
 							<motion.div
 								key='cozy'
@@ -163,8 +156,6 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 					</AnimatePresence>
 				</div>
 			</div>
-
-			{/* Now playing text — crossfades vertically between states */}
 			<AnimatePresence mode='wait' initial={false}>
 				<motion.div
 					key={playing ? 'playing' : 'idle'}

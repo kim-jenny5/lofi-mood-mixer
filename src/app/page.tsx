@@ -1,5 +1,9 @@
 import LofiMoodMixer from '@/components/LofiMoodMixer';
 
 export default function Page() {
-	return <LofiMoodMixer />;
+	return (
+		<main className='app'>
+			<LofiMoodMixer />
+		</main>
+	);
 }

@@ -24,7 +24,7 @@ export default function LofiMoodMixer() {
 	}, []);
 
 	return (
-		<div className={styles.app}>
+		<>
 			<CampingScene {...vals} />
 			<ControlPanel
 				vals={vals}
@@ -32,6 +32,6 @@ export default function LofiMoodMixer() {
 				valsRef={valsRef}
 				setVals={setVals}
 			/>
-		</div>
+		</>
 	);
 }

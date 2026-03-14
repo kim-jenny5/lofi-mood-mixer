@@ -3,9 +3,9 @@ import type { MoodVals } from '@/lib/constants';
 
 const VIDEOS = {
 	rain: '42M3esYyHdw',
-	natureDay: 'cAbTzWBhZPM', // time 10%–70%
-	natureNight: 'oDdVHn5Pvm0', // time <10% or >70%
-	cozy: 'mKCieTImjvU' // warmth >70%
+	natureDay: 'cAbTzWBhZPM',
+	natureNight: 'oDdVHn5Pvm0',
+	cozy: 'mKCieTImjvU'
 } as const;
 
 const MAX_VOL = 50;
@@ -105,7 +105,6 @@ export function useAmbientAudio(vals: MoodVals, playing: boolean) {
 				const el = divs[key];
 				if (!el) return;
 				players.current[key] = makePlayer(el, VIDEOS[key], () => {
-					// Always start silent — volume is controlled by the playing effect
 					players.current[key]?.setVolume(0);
 				});
 			});

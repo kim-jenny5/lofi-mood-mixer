@@ -2,11 +2,9 @@ import type { MoodVals } from '../lib/constants';
 import { FIREFLIES, RAIN, STARS } from '../lib/constants';
 import { clamp, computeSky, lerp, n01 } from '@/lib/utils';
 
-// ─── Pixel grid helpers ────────────────────────────────────────────────────────
 const P = 4;
 const s = (v: number) => Math.round(v / P) * P;
 
-/** Staircase stepped isoceles triangle polygon (pixel art look) */
 function stairTri(
 	cx: number,
 	peakY: number,
@@ -28,7 +26,6 @@ function stairTri(
 	return pts.join(' ');
 }
 
-/** Staircase slope from top-left peak going down-right toward base */
 function stairSlope(
 	steps: number,
 	x1: number,
@@ -46,30 +43,14 @@ function stairSlope(
 	return pts;
 }
 
-/**
- * Builds a single connected snow-band polygon that traces the stepped top
- * profile of a mountain polygon, then closes back along a parallel path
- * shifted down by `depth` pixels.
- *
- * coords – flat [x,y, x,y, …] array already snapped to the pixel grid.
- *           The first pair is the bottom-left corner (y ≈ 325) and the last
- *           pair is the bottom-right corner, so the "top profile" is every
- *           pair in between.
- * maxY   – only include profile points whose y ≤ maxY (higher on screen =
- *           smaller y value).  This acts as the snow-line altitude.
- * depth  – snow band thickness in pixels.
- */
 function snowBand(coords: number[], maxY: number, depth: number): string {
-	// Parse flat array into [x, y] pairs
 	const pts: [number, number][] = [];
 	for (let i = 0; i + 1 < coords.length; i += 2) {
 		pts.push([coords[i], coords[i + 1]]);
 	}
 
-	// The top profile is everything except the two bottom-corner points
 	const profile = pts.slice(1, pts.length - 1);
 
-	// Find the contiguous run of profile points that sit above the snow line
 	const first = profile.findIndex(([, y]) => y <= maxY);
 	if (first < 0) return '';
 	const last =
@@ -77,10 +58,7 @@ function snowBand(coords: number[], maxY: number, depth: number): string {
 
 	const band = profile.slice(first, last + 1);
 
-	// Top edge: follows the mountain steps exactly
 	const topEdge = band.map(([x, y]) => `${x},${y}`).join(' ');
-	// Bottom edge: same path shifted down, traversed in reverse so the
-	// polygon winds correctly (clockwise for SVG fill)
 	const botEdge = [...band]
 		.reverse()
 		.map(([x, y]) => `${x},${y + depth}`)
@@ -89,8 +67,7 @@ function snowBand(coords: number[], maxY: number, depth: number): string {
 	return `${topEdge} ${botEdge}`;
 }
 
-// ─── Pixel Tree component ──────────────────────────────────────────────────────
-interface PTreeProps {
+interface TreeProps {
 	cx: number;
 	base: number;
 	sc?: number;
@@ -101,16 +78,7 @@ interface PTreeProps {
 	snow: number;
 }
 
-function PTree({
-	cx,
-	base,
-	sc = 1,
-	dark,
-	mid,
-	bright,
-	trunk,
-	snow
-}: PTreeProps) {
+function Tree({ cx, base, sc = 1, dark, mid, bright, trunk, snow }: TreeProps) {
 	const h = s(80 * sc);
 	const tier = h / 3;
 	const sf = `rgba(222,238,255,${Math.min(snow, 1)})`;
@@ -154,14 +122,13 @@ function PTree({
 	);
 }
 
-// ─── Pixel Cloud component ─────────────────────────────────────────────────────
-interface PCloudProps {
+interface CloudProps {
 	cx: number;
 	cy: number;
 	op: number;
 	pal: [string, string, string];
 }
-function PCloud({ cx, cy, op, pal }: PCloudProps) {
+function Cloud({ cx, cy, op, pal }: CloudProps) {
 	const blocks: [number, number, number, number, 0 | 1 | 2][] = [
 		[-48, 8, 96, 16, 0],
 		[-40, -4, 80, 16, 0],
@@ -190,9 +157,7 @@ function PCloud({ cx, cy, op, pal }: PCloudProps) {
 	);
 }
 
-// ─── Vegetation sub-components ────────────────────────────────────────────────
-
-interface TuftProps {
+interface WeedProps {
 	x: number;
 	y: number;
 	sc: number;
@@ -200,8 +165,8 @@ interface TuftProps {
 	gCol: string;
 	gCol2: string;
 }
-function Tuft({ x, y, sc, op, gCol, gCol2 }: TuftProps) {
-	const h = Math.max(4, Math.round((14 * sc) / 4) * 4); // snap height to grid
+function Weed({ x, y, sc, op, gCol, gCol2 }: WeedProps) {
+	const h = Math.max(4, Math.round((14 * sc) / 4) * 4);
 	const cx = s(x);
 	const by = s(y);
 	return (
@@ -210,9 +175,7 @@ function Tuft({ x, y, sc, op, gCol, gCol2 }: TuftProps) {
 			style={{ transition: 'opacity 2s ease' }}
 			shapeRendering='crispEdges'
 		>
-			{/* Centre blade — tallest */}
 			<rect x={cx - 1} y={by - h} width={2} height={h} fill={gCol} />
-			{/* Left blade — leaning */}
 			<rect
 				x={cx - 4}
 				y={by - s(h * 0.8)}
@@ -221,7 +184,6 @@ function Tuft({ x, y, sc, op, gCol, gCol2 }: TuftProps) {
 				fill={gCol}
 			/>
 			<rect x={cx - 6} y={by - h} width={2} height={s(h * 0.4)} fill={gCol} />
-			{/* Right blade — leaning */}
 			<rect
 				x={cx + 2}
 				y={by - s(h * 0.8)}
@@ -230,7 +192,6 @@ function Tuft({ x, y, sc, op, gCol, gCol2 }: TuftProps) {
 				fill={gCol}
 			/>
 			<rect x={cx + 4} y={by - h} width={2} height={s(h * 0.4)} fill={gCol} />
-			{/* Far side blades — shorter, darker */}
 			<rect
 				x={cx - 8}
 				y={by - s(h * 0.5)}
@@ -263,26 +224,22 @@ function Dandelion({ x, y, stemH, op, isDay, nat }: DandelionProps) {
 		: 'rgba(14,36,12,1)';
 	const pCol = isDay ? 'rgba(235,228,195,0.95)' : 'rgba(165,155,110,0.90)';
 	const cx = s(x);
-	const ty = s(y - stemH); // top of stem = head centre
+	const ty = s(y - stemH);
 	return (
 		<g
 			opacity={op}
 			style={{ transition: 'opacity 2.2s ease' }}
 			shapeRendering='crispEdges'
 		>
-			{/* Stem — 2 px wide pixel column */}
 			<rect x={cx - 1} y={ty} width={2} height={s(stemH)} fill={sCol} />
-			{/* Petal cross — cardinal 2×6 bars */}
 			<rect x={cx - 1} y={ty - 6} width={2} height={6} fill={pCol} />
 			<rect x={cx - 1} y={ty + 2} width={2} height={6} fill={pCol} />
 			<rect x={cx - 7} y={ty - 1} width={6} height={2} fill={pCol} />
 			<rect x={cx + 2} y={ty - 1} width={6} height={2} fill={pCol} />
-			{/* Petal diagonal — 2×2 corner dots */}
 			<rect x={cx - 5} y={ty - 5} width={2} height={2} fill={pCol} />
 			<rect x={cx + 4} y={ty - 5} width={2} height={2} fill={pCol} />
 			<rect x={cx - 5} y={ty + 4} width={2} height={2} fill={pCol} />
 			<rect x={cx + 4} y={ty + 4} width={2} height={2} fill={pCol} />
-			{/* Centre bright pixel */}
 			<rect
 				x={cx - 1}
 				y={ty - 1}
@@ -296,7 +253,7 @@ function Dandelion({ x, y, stemH, op, isDay, nat }: DandelionProps) {
 
 type PlacementTuple = [number, number, number, number];
 
-const TUFTS_BEHIND: PlacementTuple[] = [
+const WEEDS_BEHIND: PlacementTuple[] = [
 	[460, 375, 1.1, 0.0],
 	[520, 405, 1.0, 0.18],
 	[590, 438, 1.0, 0.28],
@@ -304,7 +261,7 @@ const TUFTS_BEHIND: PlacementTuple[] = [
 	[440, 418, 0.78, 0.35],
 	[630, 430, 0.9, 0.28]
 ];
-const TUFTS_FRONT: PlacementTuple[] = [
+const WEEDS_FRONT: PlacementTuple[] = [
 	[215, 380, 1.0, 0.0],
 	[310, 395, 0.9, 0.0],
 	[680, 385, 1.0, 0.0],
@@ -330,8 +287,6 @@ const DAND_FRONT: PlacementTuple[] = [
 	[700, 420, 18, 0.62],
 	[848, 388, 20, 0.72]
 ];
-
-// ─── Main scene component ──────────────────────────────────────────────────────
 
 export default function CampingScene({
 	time,
@@ -360,7 +315,6 @@ export default function CampingScene({
 	const nightOver = Math.max(0, t - 0.62) * 0.62;
 	const warmOver = Math.max(0, w - 0.55) * 0.13;
 	const isDay = t < 0.68;
-	const fMed = Math.round(lerp(42, 150, fireGlow));
 
 	const mBgR = isDay ? Math.round(lerp(108, 88, t * 0.5)) : 20;
 	const mBgG = isDay ? Math.round(lerp(114, 94, t * 0.4)) : 14;
@@ -427,7 +381,6 @@ export default function CampingScene({
 			}, [])
 			.join(' ');
 
-	// ── Mountain polygon coords (stepped silhouette, P=4 grid-snapped) ─────────
 	const bgMtnCoords = [
 		s(0),
 		s(325),
@@ -650,7 +603,6 @@ export default function CampingScene({
 		s(325)
 	];
 
-	// Tent face polygons
 	const tentRightPts = [
 		`${s(392)},${s(278)}`,
 		...Array.from({ length: 10 }, (_, i) => {
@@ -752,7 +704,7 @@ export default function CampingScene({
 			</defs>
 
 			<g clipPath='url(#clip)'>
-				{/* ── Sky ── */}
+				{/* Sky */}
 				<rect
 					width='900'
 					height='325'
@@ -760,7 +712,7 @@ export default function CampingScene({
 					shapeRendering='crispEdges'
 				/>
 
-				{/* ── Stars — 4×4 pixel squares with sparkle crosses ── */}
+				{/* Stars */}
 				<g
 					opacity={starOp}
 					style={{ transition: 'opacity 2.2s ease' }}
@@ -813,7 +765,7 @@ export default function CampingScene({
 					})}
 				</g>
 
-				{/* ── Moon — blocky square with pixel craters ── */}
+				{/* Moon */}
 				<g
 					opacity={moonOp}
 					style={{ transition: 'opacity 2s ease' }}
@@ -863,7 +815,7 @@ export default function CampingScene({
 					/>
 				</g>
 
-				{/* ── Sun — clean pixel cross ── */}
+				{/* Sun */}
 				<g
 					opacity={sunOp}
 					style={{ transition: 'opacity 1s ease' }}
@@ -914,7 +866,7 @@ export default function CampingScene({
 					/>
 				</g>
 
-				{/* ── Pixel clouds ── */}
+				{/* Clouds */}
 				<g>
 					<animateTransform
 						attributeName='transform'
@@ -926,7 +878,7 @@ export default function CampingScene({
 						keySplines='0.45 0 0.55 1;0.45 0 0.55 1'
 						additive='sum'
 					/>
-					<PCloud cx={120} cy={110} op={cloudOp} pal={cloudPal} />
+					<Cloud cx={120} cy={110} op={cloudOp} pal={cloudPal} />
 				</g>
 				<g>
 					<animateTransform
@@ -939,7 +891,7 @@ export default function CampingScene({
 						keySplines='0.45 0 0.55 1;0.45 0 0.55 1'
 						additive='sum'
 					/>
-					<PCloud cx={580} cy={88} op={cloudOp * 0.85} pal={cloudPal} />
+					<Cloud cx={580} cy={88} op={cloudOp * 0.85} pal={cloudPal} />
 				</g>
 				<g>
 					<animateTransform
@@ -952,10 +904,10 @@ export default function CampingScene({
 						keySplines='0.45 0 0.55 1;0.45 0 0.55 1'
 						additive='sum'
 					/>
-					<PCloud cx={795} cy={118} op={cloudOp * 0.6} pal={cloudPal} />
+					<Cloud cx={795} cy={118} op={cloudOp * 0.6} pal={cloudPal} />
 				</g>
 
-				{/* ── Background mountains ── */}
+				{/* Background Mountains */}
 				<polygon
 					fill={mtnBg}
 					shapeRendering='crispEdges'
@@ -963,13 +915,7 @@ export default function CampingScene({
 					points={toPoints(bgMtnCoords)}
 				/>
 
-				{/*
-				  ── Snow on background mountains ──
-				  A single connected polygon that traces the stepped top profile of the
-				  mountain polygon above the snow-line (maxY=196) and closes back along
-				  the same path shifted down by 10 px.  This produces one continuous
-				  snow band that follows every ledge and step — no isolated blobs.
-				*/}
+				{/* Snow on background mountains */}
 				<polygon
 					opacity={snow}
 					fill={snowHi}
@@ -978,7 +924,7 @@ export default function CampingScene({
 					points={snowBand(bgMtnCoords, 284, 10)}
 				/>
 
-				{/* ── Mid mountains ── */}
+				{/* ── Foreground mountains ── */}
 				<polygon
 					fill={mtnMid}
 					shapeRendering='crispEdges'
@@ -986,13 +932,7 @@ export default function CampingScene({
 					points={toPoints(midMtnCoords)}
 				/>
 
-				{/*
-				  ── Snow on mid mountains ──
-				  Same approach: one connected band across all upper ledges (maxY=264),
-				  8 px thick.  Because the mid mountain has shallow valleys (y=264) just
-				  below the snow line, the band naturally bridges between peaks and
-				  looks like an unbroken snow layer sitting on the ridge.
-				*/}
+				{/* Snow on foreground mountains */}
 				<polygon
 					opacity={snow}
 					fill={snowMd}
@@ -1001,7 +941,7 @@ export default function CampingScene({
 					points={snowBand(midMtnCoords, 314, 8)}
 				/>
 
-				{/* ── Ground ── */}
+				{/* Ground */}
 				<rect
 					x={0}
 					y={315}
@@ -1012,7 +952,7 @@ export default function CampingScene({
 					style={{ transition: 'fill 2s ease' }}
 				/>
 
-				{/* ── Snow ground cover ── */}
+				{/* Snow on ground cover */}
 				<g style={{ transition: 'opacity 2.2s ease' }} opacity={snow}>
 					<rect
 						x={0}
@@ -1031,7 +971,7 @@ export default function CampingScene({
 					<rect x={0} y={316} width={900} height={100} fill='url(#snowGloss)' />
 				</g>
 
-				{/* ── Horizon shadow strip ── */}
+				{/* Horizon shadow */}
 				<rect
 					x={0}
 					y={316}
@@ -1042,7 +982,7 @@ export default function CampingScene({
 					style={{ transition: 'fill 2s ease' }}
 				/>
 
-				{/* ── Pixel rocks ── */}
+				{/* Rocks */}
 				{(
 					[
 						[148, 328, 28, 14],
@@ -1095,9 +1035,9 @@ export default function CampingScene({
 					);
 				})}
 
-				{/* ── Grass tufts behind tent ── */}
-				{TUFTS_BEHIND.map(([x, y, sc, min], i) => (
-					<Tuft
+				{/* Weeds behind tent */}
+				{WEEDS_BEHIND.map(([x, y, sc, min], i) => (
+					<Weed
 						key={i}
 						x={x}
 						y={y}
@@ -1119,8 +1059,8 @@ export default function CampingScene({
 					/>
 				))}
 
-				{/* ── Trees left ── */}
-				<PTree
+				{/* Trees on the left */}
+				<Tree
 					cx={98}
 					base={318}
 					sc={1.12}
@@ -1130,7 +1070,7 @@ export default function CampingScene({
 					trunk={trunkCol}
 					snow={snow}
 				/>
-				<PTree
+				<Tree
 					cx={48}
 					base={318}
 					sc={0.8}
@@ -1140,7 +1080,7 @@ export default function CampingScene({
 					trunk={trunkCol}
 					snow={snow}
 				/>
-				<PTree
+				<Tree
 					cx={172}
 					base={318}
 					sc={0.7}
@@ -1151,8 +1091,8 @@ export default function CampingScene({
 					snow={snow}
 				/>
 
-				{/* ── Trees right ── */}
-				<PTree
+				{/* Trees on the right */}
+				<Tree
 					cx={802}
 					base={318}
 					sc={1.12}
@@ -1162,7 +1102,7 @@ export default function CampingScene({
 					trunk={trunkCol}
 					snow={snow}
 				/>
-				<PTree
+				<Tree
 					cx={856}
 					base={318}
 					sc={0.8}
@@ -1172,7 +1112,7 @@ export default function CampingScene({
 					trunk={trunkCol}
 					snow={snow}
 				/>
-				<PTree
+				<Tree
 					cx={730}
 					base={318}
 					sc={0.7}
@@ -1183,8 +1123,8 @@ export default function CampingScene({
 					snow={snow}
 				/>
 
-				{/* ── Hero centre tree ── */}
-				<PTree
+				{/* Main tree */}
+				<Tree
 					cx={460}
 					base={318}
 					sc={1.6}
@@ -1195,7 +1135,6 @@ export default function CampingScene({
 					snow={snow}
 				/>
 
-				{/* ── Tent + Fire (offset 140px right, same as original) ── */}
 				<g transform='translate(140,0)' shapeRendering='crispEdges'>
 					{/* Tent faces */}
 					<polygon
@@ -1219,7 +1158,7 @@ export default function CampingScene({
 						style={{ transition: 'fill 2s ease' }}
 					/>
 
-					{/* Guy-lines */}
+					{/* Tent strings */}
 					<line
 						x1={270}
 						y1={382}
@@ -1265,7 +1204,7 @@ export default function CampingScene({
 						style={{ transition: 'rx 1.2s ease, ry 1.2s ease' }}
 					/>
 
-					{/* Pixel logs */}
+					{/* Logs */}
 					<rect
 						x={s(548)}
 						y={s(416)}
@@ -1291,7 +1230,7 @@ export default function CampingScene({
 						style={{ transition: 'fill 2s ease' }}
 					/>
 
-					{/* Pixel flames */}
+					{/* Flames */}
 					<g filter='url(#softGlow)'>
 						<rect
 							x={s(558)}
@@ -1384,7 +1323,7 @@ export default function CampingScene({
 						</rect>
 					</g>
 
-					{/* Pixel smoke */}
+					{/* Smoke */}
 					{[0, 1, 2].map((i) => (
 						<rect
 							key={i}
@@ -1415,12 +1354,11 @@ export default function CampingScene({
 						</rect>
 					))}
 				</g>
-				{/* end tent+fire group */}
 
-				{/* ── Front vegetation — rendered AFTER tent so it draws on top ── */}
+				{/* Front weeds */}
 				<g transform='translate(140,0)'>
-					{TUFTS_FRONT.map(([x, y, sc, min], i) => (
-						<Tuft
+					{WEEDS_FRONT.map(([x, y, sc, min], i) => (
+						<Weed
 							key={i}
 							x={x}
 							y={y}
@@ -1443,7 +1381,7 @@ export default function CampingScene({
 					))}
 				</g>
 
-				{/* ── Pixel fireflies ── */}
+				{/* Fireflies */}
 				<g
 					opacity={nat > 0.28 ? 1 : 0}
 					style={{ transition: 'opacity 2s ease' }}
@@ -1476,7 +1414,7 @@ export default function CampingScene({
 					))}
 				</g>
 
-				{/* ── Pixel rain ── */}
+				{/* Rain */}
 				<g opacity={r} style={{ transition: 'opacity 2s ease' }}>
 					{RAIN.map((drop, i) => (
 						<rect
@@ -1505,8 +1443,6 @@ export default function CampingScene({
 						</rect>
 					))}
 				</g>
-
-				{/* ── Overlays ── */}
 				<rect
 					width='900'
 					height='550'

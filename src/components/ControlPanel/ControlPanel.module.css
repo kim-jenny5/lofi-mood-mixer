@@ -73,7 +73,6 @@
 	gap: 13px;
 }
 
-/* Layout */
 .panelRow {
 	position: absolute;
 	bottom: 26px;
@@ -110,7 +109,6 @@
 	display: none;
 }
 
-/* Panel top row */
 .panelTopRow {
 	display: flex;
 	align-items: center;
@@ -118,7 +116,6 @@
 	margin-bottom: 2px;
 }
 
-/* Presets toggle button */
 .presetsBtn {
 	display: inline-flex;
 	align-items: center;
@@ -160,7 +157,7 @@
 	box-shadow: 0 0 12px rgba(255, 175, 52, 0.12);
 }
 
-/* Mobile layout */
+/* Mobile */
 @media (max-width: 480px) {
 	.panelRow {
 		flex-direction: column-reverse;

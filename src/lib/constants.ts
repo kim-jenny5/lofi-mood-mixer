@@ -1,5 +1,3 @@
-// ─── Domain types ─────────────────────────────────────────────────────────────
-
 export interface MoodVals {
 	time: number;
 	warmth: number;
@@ -26,20 +24,18 @@ export interface SavedVibe {
 	values: MoodVals;
 }
 
-export interface FireflyData {
+interface FireflyData {
 	x: number;
 	y: number;
 	delay: string;
 	dur: string;
 }
 
-export interface RainDrop {
+interface RainDrop {
 	x: number;
 	delay: string;
 	dur: string;
 }
-
-// ─── App defaults ─────────────────────────────────────────────────────────────
 
 export const INIT: MoodVals = { time: 78, warmth: 88, weather: 0, nature: 55 };
 
@@ -97,8 +93,6 @@ export const SLIDERS: SliderConfig[] = [
 	{ key: 'weather', label: 'Weather', left: 'Clear', right: 'Rainy' },
 	{ key: 'nature', label: 'Nature', left: 'Quiet', right: 'Vibrant' }
 ];
-
-// ─── Scene data ───────────────────────────────────────────────────────────────
 
 export const STARS: [number, number][] = [
 	[148, 38],

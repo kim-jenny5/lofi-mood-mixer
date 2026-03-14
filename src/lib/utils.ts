@@ -1,13 +1,11 @@
 import type { MoodVals } from './constants';
 
-// Math helpers
 export const lerp = (a: number, b: number, t: number): number =>
 	a + (b - a) * t;
 export const clamp = (v: number, lo: number, hi: number): number =>
 	Math.max(lo, Math.min(hi, v));
 export const n01 = (v: number): number => clamp(v, 0, 100) / 100;
 
-// Multi-stop color interpolation
 interface ColorStop {
 	t: number;
 	c: [number, number, number];
@@ -31,8 +29,7 @@ function interpStops(stops: ColorStop[], t: number): [number, number, number] {
 	];
 }
 
-// Sky gradient compute
-export interface SkyColors {
+interface SkyColors {
 	top: string;
 	bottom: string;
 }
@@ -82,9 +79,6 @@ export function computeSky(time: number, warmth: number): SkyColors {
 	return { top: `rgb(${top})`, bottom: `rgb(${bot})` };
 }
 
-// Animation helper
-export const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3);
-
 export function animateMoodVals({
 	from,
 	to,
@@ -106,7 +100,7 @@ export function animateMoodVals({
 		if (cancelled) return;
 
 		const progress = Math.min((now - startTime) / duration, 1);
-		const eased = easeOutCubic(progress);
+		const eased = 1 - Math.pow(1 - progress, 3);
 
 		onUpdate({
 			time: Math.round(lerp(from.time, to.time, eased)),
