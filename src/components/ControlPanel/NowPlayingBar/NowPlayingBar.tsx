@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 import type { MoodVals } from '@/lib/constants';
@@ -36,6 +37,21 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 	const { containerRef, playing, ready, toggle } = useYouTubePlayer();
 	const { rainDivRef, natureDayDivRef, natureNightDivRef, cozyDivRef } =
 		useAmbientAudio(vals, playing);
+
+	useEffect(() => {
+		const handleKey = (e: KeyboardEvent) => {
+			if (!ready) return;
+			// Don't fire when the user is typing in an input or textarea
+			const tag = (e.target as HTMLElement).tagName;
+			if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+			if (e.code === 'Space' || e.code === 'Enter') {
+				e.preventDefault();
+				toggle();
+			}
+		};
+		window.addEventListener('keydown', handleKey);
+		return () => window.removeEventListener('keydown', handleKey);
+	}, [ready, toggle]);
 
 	return (
 		<div className={styles.panelFooter}>
@@ -93,16 +109,7 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 								♪ Lofi Girl
 							</motion.div>
 						)}
-						{vals.warmth > 70 && (
-							<motion.div
-								key='cozy'
-								className={`${styles.badge} ${styles.badgeActive}`}
-								{...badgeAnim}
-								layout
-							>
-								🔥 Cozy
-							</motion.div>
-						)}
+
 						{vals.weather > 15 ? (
 							<motion.div
 								key='rain'
@@ -122,6 +129,7 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 								☀ Clear
 							</motion.div>
 						)}
+
 						{vals.nature > 18 ? (
 							<motion.div
 								key='nature'
@@ -139,6 +147,17 @@ export default function NowPlayingBar({ vals }: { vals: MoodVals }) {
 								layout
 							>
 								🔇 Quiet
+							</motion.div>
+						)}
+
+						{vals.warmth > 70 && (
+							<motion.div
+								key='cozy'
+								className={`${styles.badge} ${styles.badgeActive}`}
+								{...badgeAnim}
+								layout
+							>
+								🔥 Cozy
 							</motion.div>
 						)}
 					</AnimatePresence>

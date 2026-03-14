@@ -4,60 +4,117 @@
 	gap: 8px;
 }
 
-.saveRow {
-	display: flex;
-	gap: 7px;
-}
-
-.saveInput {
-	flex: 1;
-	font-family: 'Jost', sans-serif;
-	font-size: 0.73rem;
-	padding: 8px 12px;
-	border-radius: 10px;
-	border: 1px solid rgba(255, 195, 118, 0.22);
-	background: rgba(255, 195, 92, 0.06);
-	color: rgba(255, 228, 188, 0.9);
-	outline: none;
-	transition: border-color 0.2s ease;
-}
-
-.saveInput::placeholder {
-	color: rgba(255, 195, 118, 0.32);
-}
-
-.saveInput:focus {
-	border-color: rgba(255, 195, 118, 0.48);
-}
-
-.saveBtn {
+/* ── Idle state: full-width bottle button ─────────────────────────────────── */
+.bottleBtn {
+	width: 100%;
 	font-family: 'Jost', sans-serif;
 	font-size: 0.7rem;
 	font-weight: 500;
-	letter-spacing: 0.06em;
-	padding: 8px 14px;
-	border-radius: 10px;
-	border: 1px solid rgba(255, 175, 72, 0.38);
-	background: rgba(255, 175, 55, 0.13);
-	color: rgba(255, 212, 138, 0.95);
+	letter-spacing: 0.08em;
+	padding: 9px 16px;
+	border-radius: 24px;
+	border: 1px solid rgba(255, 175, 72, 0.32);
+	background: rgba(255, 175, 55, 0.09);
+	color: rgba(255, 212, 138, 0.82);
 	cursor: pointer;
-	white-space: nowrap;
+	text-align: center;
 	transition: all 0.2s ease;
+	outline: none;
 }
 
-.saveBtn:hover {
-	background: rgba(255, 175, 55, 0.26);
-	border-color: rgba(255, 175, 72, 0.58);
+.bottleBtn:hover {
+	background: rgba(255, 175, 55, 0.18);
+	border-color: rgba(255, 175, 72, 0.52);
 	color: rgba(255, 228, 165, 1);
 }
 
-.saveBtn:active {
-	transform: scale(0.95);
+.bottleBtn:active {
+	transform: scale(0.97);
 }
 
-.saveBtnFull {
+.pillWrapper {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.pillDismiss {
+	background: none;
+	border: none;
+	color: rgba(255, 195, 118, 0.35);
+	font-size: 0.82rem;
+	cursor: pointer;
+	padding: 4px 6px;
+	flex-shrink: 0;
+	outline: none;
+	transition: color 0.18s ease-in;
+}
+
+.pillDismiss:hover {
+	color: rgba(255, 195, 118, 0.75);
+	border-radius: 50%;
+	background: rgba(255, 195, 118, 0.25);
+}
+
+/* ── Active state: single pill with input + ✦ icon ───────────────────────── */
+.pill {
+	display: flex;
+	align-items: center;
 	width: 100%;
-	text-align: center;
+	border-radius: 24px;
+	border: 1px solid rgba(255, 175, 72, 0.38);
+	background: rgba(255, 175, 55, 0.07);
+	padding: 0 4px 0 14px;
+	transition: border-color 0.2s ease;
+}
+
+.pill:focus-within {
+	border-color: rgba(255, 195, 118, 0.55);
+	background: rgba(255, 175, 55, 0.11);
+}
+
+.pillInput {
+	flex: 1;
+	font-family: 'Jost', sans-serif;
+	font-size: 0.73rem;
+	padding: 9px 0;
+	background: none;
+	border: none;
+	outline: none;
+	color: rgba(255, 228, 188, 0.9);
+}
+
+.pillInput::placeholder {
+	color: rgba(255, 195, 118, 0.32);
+}
+
+.pillSave {
+	padding: 6px 10px;
+	border-radius: 20px;
+	border: none;
+	background: none;
+	color: rgba(255, 195, 118, 0.28);
+	font-size: 0.68rem;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	white-space: nowrap;
+	transition: all 0.2s ease;
+	outline: none;
+}
+
+.pillSaveReady {
+	color: rgba(255, 212, 138, 0.9);
+	background: rgba(255, 175, 55, 0.15);
+}
+
+.pillSaveReady:hover {
+	background: rgba(255, 175, 55, 0.28);
+	color: rgba(255, 228, 165, 1);
 }
 
 .savedVibes {
@@ -87,10 +144,4 @@
 
 .vibeChip:active {
 	transform: scale(0.94);
-}
-
-.vibeChip:disabled {
-	opacity: 0.35;
-	cursor: not-allowed;
-	pointer-events: none;
 }

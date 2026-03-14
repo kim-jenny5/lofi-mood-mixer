@@ -37,7 +37,7 @@ export default function PresetDrawer({
 			</div>
 			<div className={styles.divider} />
 			<div className={styles.section}>
-				<span className={styles.sectionLabel}>Your Mixes</span>
+				<span className={styles.sectionLabel}>Your Vibes</span>
 				<div className={styles.list}>
 					{savedVibes.length === 0 ? (
 						<p className={styles.empty}>No vibes saved yet</p>

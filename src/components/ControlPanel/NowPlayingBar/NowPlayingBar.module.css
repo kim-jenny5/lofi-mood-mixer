@@ -28,6 +28,11 @@
 	transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 	box-shadow: 0 4px 22px rgba(0, 0, 0, 0.35);
 	flex-shrink: 0;
+	outline: none;
+}
+
+.playBtn:focus-visible {
+	outline: none;
 }
 
 .playBtn:hover {
@@ -66,6 +71,7 @@
 	background: rgba(8, 5, 20, 0.42);
 	border: 1px solid rgba(255, 228, 185, 0.12);
 	color: rgba(255, 218, 158, 0.45);
+	transition: all 0.8s ease;
 	white-space: nowrap;
 }
 
@@ -84,6 +90,7 @@
 	letter-spacing: 0.12em;
 	color: rgba(255, 210, 155, 1);
 	text-align: center;
+	transition: color 0.8s ease;
 }
 
 .nowPlayingIdle {

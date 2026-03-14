@@ -47,7 +47,8 @@ export default function ControlPanel({
 }: ControlPanelProps) {
 	const [activePreset, setActive] = useState<string | null>('campfire');
 	const [notice, setNotice] = useState('');
-	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [label, setLabel] = useState('');
+	const [drawerOpen, setDrawerOpen] = useState(true);
 	const [savedVibes, setSavedVibes] = useState<SavedVibe[]>([]);
 	const panelRowRef = useRef<HTMLDivElement>(null);
 
@@ -119,7 +120,11 @@ export default function ControlPanel({
 		setSavedVibes(next);
 		persistVibes(next);
 		setNotice(`✦ "${vibe.name}" bottled`);
-		setTimeout(() => setNotice(''), 3000);
+		setTimeout(() => setNotice(''), 2200);
+	};
+
+	const handleSave = (name: string) => {
+		handleVibeCreated({ id: Date.now(), name, values: { ...valsRef.current } });
 	};
 
 	return (
@@ -191,7 +196,14 @@ export default function ControlPanel({
 						))}
 					</div>
 					<div className={styles.divider} />
-					<SavePresetBtn valsRef={valsRef} onVibeCreated={handleVibeCreated} />
+					<SavePresetBtn
+						label={label}
+						setLabel={setLabel}
+						setActive={setActive}
+						animateTo={animateTo}
+						valsRef={valsRef}
+						onSave={handleSave}
+					/>
 					<div className={styles.divider} />
 					<NowPlayingBar vals={vals} />
 				</motion.div>
