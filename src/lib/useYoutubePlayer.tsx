@@ -6,7 +6,7 @@ declare global {
 	}
 }
 
-const LOFI_GIRL_VIDEO_ID = 'jfKfPfyJRdk';
+const LOFI_GIRL_VIDEO_ID = 'X4VbdwhkE10';
 
 function loadYTScript(): Promise<void> {
 	return new Promise((resolve) => {
